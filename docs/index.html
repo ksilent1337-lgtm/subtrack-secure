@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SubTrack Desktop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Subscription landing + tracker</p>
+        <h1>SubTrack</h1>
+      </div>
+
+      <div class="topbar-actions">
+        <nav class="top-links" aria-label="Навигация">
+          <a href="#features">Возможности</a>
+          <a href="#pricing">Тарифы</a>
+          <a href="#contacts">Контакты</a>
+        </nav>
+        <nav class="filters" aria-label="Фильтр подписок">
+          <button class="filter-button active" data-filter="all">Все</button>
+          <button class="filter-button" data-filter="active">Активные</button>
+          <button class="filter-button" data-filter="soon">Скоро спишется</button>
+        </nav>
+        <button class="ghost-button" id="theme-toggle" type="button" aria-label="Переключить тему">
+          Темная тема
+        </button>
+        <button class="ghost-button user-button" id="auth-open-button" type="button">
+          Гость
+        </button>
+        <button class="primary-button" id="open-form-button">Добавить подписку</button>
+      </div>
+    </header>
+
+    <section class="panel setup-banner hidden" id="setup-banner">
+      <div>
+        <p class="eyebrow">Secure setup required</p>
+        <h2>Подключи Firebase для реальной работы</h2>
+        <p id="setup-banner-text">Заполни `firebase-config.js`, включи Auth и Firestore, после чего сайт заработает с безопасным облачным хранением.</p>
+      </div>
+    </section>
+
+    <section class="landing-hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Контроль подписок без хаоса</p>
+        <h2>Все подписки, траты и Premium-продажа в одном аккуратном лендинге.</h2>
+        <p>SubTrack помогает следить за ежемесячными расходами, не забывать о списаниях и красиво вести пользователя к покупке Premium через Telegram.</p>
+
+        <div class="hero-actions">
+          <a class="primary-button" href="#pricing">Посмотреть тарифы</a>
+          <a class="secondary-button tg-link-button" href="https://t.me/Dof_white" target="_blank" rel="noreferrer">Купить через Telegram</a>
+        </div>
+
+        <div class="hero-tags">
+          <span>Первые 5 подписок бесплатно</span>
+          <span>Email / Telegram уведомления</span>
+          <span>Светлая и темная тема</span>
+        </div>
+      </div>
+
+      <div class="hero-preview">
+        <div class="hero-preview-card">
+          <div class="preview-top">
+            <span class="preview-dot"></span>
+            <span class="preview-dot"></span>
+            <span class="preview-dot"></span>
+          </div>
+          <div class="preview-metric">
+            <small>Всего в месяц</small>
+            <strong>2 490 ₽</strong>
+          </div>
+          <div class="preview-list">
+            <div>
+              <span>Netflix</span>
+              <b>799 ₽</b>
+            </div>
+            <div>
+              <span>Spotify</span>
+              <b>349 ₽</b>
+            </div>
+            <div>
+              <span>Notion</span>
+              <b>990 ₽</b>
+            </div>
+          </div>
+          <a class="preview-cta" href="https://t.me/Dof_white" target="_blank" rel="noreferrer">Premium через @Dof_white</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-strip" id="features">
+      <article class="feature-card">
+        <h3>Контроль расходов</h3>
+        <p>Сразу видно, сколько уходит в месяц и год, без таблиц и ручного подсчета.</p>
+      </article>
+      <article class="feature-card">
+        <h3>Напоминания</h3>
+        <p>Следи за ближайшими списаниями и не забывай отключать лишние сервисы вовремя.</p>
+      </article>
+      <article class="feature-card">
+        <h3>Premium через Telegram</h3>
+        <p>Продажа без сложного checkout: пользователь пишет тебе в Telegram и покупает доступ.</p>
+      </article>
+    </section>
+
+    <main class="layout">
+      <section class="content-column">
+        <section class="welcome-banner panel">
+          <div class="welcome-copy">
+            <p class="eyebrow">Персональный контроль</p>
+            <h2 id="welcome-title">Устал держать подписки в голове?</h2>
+            <p id="welcome-text">Собери все списания в одном месте, смотри общую нагрузку и не пропускай ближайшие платежи.</p>
+          </div>
+          <div class="welcome-glow" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </section>
+
+        <section class="hero-grid" aria-label="Сводка расходов">
+          <article class="metric-card accent-blue">
+            <span>Всего в месяц</span>
+            <strong id="monthly-total">0 ₽</strong>
+            <small>Сумма всех активных подписок в месячном эквиваленте</small>
+          </article>
+          <article class="metric-card accent-violet">
+            <span>Всего в год</span>
+            <strong id="yearly-total">0 ₽</strong>
+            <small>Годовой бюджет на подписки</small>
+          </article>
+          <article class="metric-card accent-green">
+            <span>Ближайшее списание</span>
+            <strong id="next-charge">Нет данных</strong>
+            <small id="next-charge-details">Добавь первую подписку</small>
+          </article>
+          <article class="metric-card accent-orange">
+            <span>Активных подписок</span>
+            <strong id="active-count">0</strong>
+            <small>Подключенные и неотмененные сервисы</small>
+          </article>
+        </section>
+
+        <section class="panel app-preview-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Как выглядит продукт</h2>
+              <p>Ниже живой экран приложения: пользователь добавляет подписки, смотрит траты и может перейти в Premium.</p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="subscriptions-table">
+              <thead>
+                <tr>
+                  <th>Сервис</th>
+                  <th>Категория</th>
+                  <th>Цена</th>
+                  <th>Период</th>
+                  <th>Следующее списание</th>
+                  <th>Уведомление</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="subscriptions-body"></tbody>
+            </table>
+          </div>
+
+          <div class="empty-state" id="empty-state">
+            Пока нет подписок. Добавь первую, чтобы увидеть месячную и годовую нагрузку.
+          </div>
+
+          <section class="ad-slot banner-ad" aria-label="Место под рекламу">
+            <div>
+              <p class="ad-label">Связаться за рекламой</p>
+              <h3>@Dof_white - Telegram</h3>
+              <p>Место под баннер под списком подписок.</p>
+            </div>
+          </section>
+        </section>
+
+        <section class="panel admin-panel hidden" id="admin-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Admin Panel</h2>
+              <p>Заявки на Premium и управление привилегиями доступны только аккаунту с server-side ролью `admin`.</p>
+            </div>
+            <span class="plan-badge">Admin</span>
+          </div>
+
+          <div class="admin-grid">
+            <article class="admin-card">
+              <h3>Заявки из Telegram</h3>
+              <div class="admin-list" id="premium-requests-list"></div>
+            </article>
+
+            <article class="admin-card">
+              <h3>Активный Premium</h3>
+              <div class="admin-list" id="premium-members-list"></div>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <aside class="sidebar">
+        <section class="panel plan-card" id="pricing">
+          <div class="plan-card-top">
+            <div>
+              <p class="eyebrow">Тариф</p>
+              <h2 id="plan-title">Free</h2>
+            </div>
+            <span class="plan-badge" id="plan-badge">5 бесплатно</span>
+          </div>
+
+          <p class="plan-text" id="plan-text">Первые 5 подписок доступны бесплатно. Дальше нужен Premium.</p>
+          <div class="plan-progress">
+            <div class="plan-progress-bar" id="plan-progress-bar"></div>
+          </div>
+          <p class="plan-caption" id="plan-caption">0 из 5 использовано</p>
+          <button class="primary-button" id="open-premium-button" type="button">Купить Premium в Telegram</button>
+        </section>
+
+        <section class="panel reminder-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Скоро спишется</h2>
+              <p>Список подписок, по которым стоит отправлять email или Telegram-напоминание за 3 дня.</p>
+            </div>
+          </div>
+          <ul id="reminder-list" class="reminder-list"></ul>
+        </section>
+
+        <section class="ad-slot sidebar-ad" aria-label="Место под рекламу в сайдбаре">
+          <p class="ad-label">Связаться за рекламой</p>
+          <h3>@Dof_white - Telegram</h3>
+          <p>Место под рекламу в правом сайдбаре.</p>
+        </section>
+
+        <section class="ad-slot native-ad" aria-label="Место под нативную интеграцию">
+          <p class="ad-label">Связаться за рекламой</p>
+          <h3>@Dof_white - Telegram</h3>
+          <p>Место под нативную интеграцию или партнерский материал.</p>
+        </section>
+      </aside>
+    </main>
+
+    <section class="cta-band" id="contacts">
+      <div>
+        <p class="eyebrow">Telegram checkout</p>
+        <h2>Хочешь Premium или рекламу? Напиши в Telegram.</h2>
+        <p>Для покупки Premium, размещения рекламы или партнерства используй один контакт.</p>
+      </div>
+      <a class="primary-button" href="https://t.me/Dof_white" target="_blank" rel="noreferrer">@Dof_white</a>
+    </section>
+  </div>
+
+  <div class="modal-overlay" id="subscription-modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="subscription-modal-title">
+      <button class="modal-close" id="close-form-button" type="button" aria-label="Закрыть окно">
+        ×
+      </button>
+
+      <div class="modal-header">
+        <p class="eyebrow">Новая подписка</p>
+        <h2 id="subscription-modal-title">Добавить подписку</h2>
+        <p>Минимальный MVP: ручной ввод, расчет бюджета, подготовка к уведомлениям.</p>
+      </div>
+
+      <form id="subscription-form" class="subscription-form">
+        <label>
+          <span>Название</span>
+          <input type="text" name="name" placeholder="Netflix" required>
+        </label>
+
+        <label>
+          <span>Цена</span>
+          <input type="number" name="price" min="0" step="0.01" placeholder="499" required>
+        </label>
+
+        <label>
+          <span>Валюта</span>
+          <select name="currency">
+            <option value="RUB">RUB</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Период</span>
+          <select name="billingPeriod">
+            <option value="monthly">Ежемесячно</option>
+            <option value="yearly">Ежегодно</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Следующее списание</span>
+          <input type="date" name="nextChargeDate" required>
+          <small class="field-hint">Укажи дату следующего платежа.</small>
+        </label>
+
+        <label>
+          <span>Категория</span>
+          <select name="category">
+            <option value="Видео">Видео</option>
+            <option value="Музыка">Музыка</option>
+            <option value="Работа">Работа</option>
+            <option value="Облако">Облако</option>
+            <option value="Игры">Игры</option>
+            <option value="Другое">Другое</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Канал уведомления</span>
+          <select name="notificationChannel">
+            <option value="email">Email</option>
+            <option value="telegram">Telegram</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Email / Telegram</span>
+          <input type="text" name="contact" placeholder="name@example.com или @nickname">
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" class="primary-button">Сохранить</button>
+          <button type="reset" class="secondary-button">Очистить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="premium-modal" aria-hidden="true">
+    <div class="modal-card premium-modal-card" role="dialog" aria-modal="true" aria-labelledby="premium-modal-title">
+      <button class="modal-close" id="close-premium-button" type="button" aria-label="Закрыть окно">
+        ×
+      </button>
+
+      <div class="modal-header">
+        <p class="eyebrow">Premium</p>
+        <h2 id="premium-modal-title">Больше 5 подписок только в Premium</h2>
+        <p>Бесплатно доступны первые 5 подписок. Для покупки Premium пользователь пишет тебе в Telegram и получает доступ вручную.</p>
+      </div>
+
+      <div class="premium-grid">
+        <article class="premium-feature">
+          <strong>Free</strong>
+          <span>До 5 подписок</span>
+          <p>Базовый учет расходов, напоминания и светлая/темная тема.</p>
+        </article>
+        <article class="premium-feature premium-feature-accent">
+          <strong>Premium</strong>
+          <span>Без лимита</span>
+          <p>Добавляй сколько угодно подписок и не упирайся в ограничение.</p>
+        </article>
+      </div>
+
+      <div class="tariff-grid" id="tariff-grid">
+        <button class="tariff-card active" type="button" data-plan="monthly">
+          <strong>Premium Month</strong>
+          <span>199 ₽ / месяц</span>
+          <small>Подходит для быстрого старта</small>
+        </button>
+        <button class="tariff-card" type="button" data-plan="yearly">
+          <strong>Premium Year</strong>
+          <span>1490 ₽ / год</span>
+          <small>Самый выгодный тариф</small>
+        </button>
+        <button class="tariff-card" type="button" data-plan="lifetime">
+          <strong>Lifetime</strong>
+          <span>2990 ₽ навсегда</span>
+          <small>Один платеж без продления</small>
+        </button>
+      </div>
+
+      <div class="premium-actions">
+        <button class="primary-button" id="activate-premium-button" type="button">Купить через Telegram</button>
+        <button class="secondary-button" id="later-premium-button" type="button">Позже</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-gate" id="auth-gate" aria-hidden="true">
+    <div class="auth-gate-backdrop"></div>
+    <div class="auth-shell">
+      <section class="auth-story">
+        <p class="eyebrow">SubTrack</p>
+        <h2>Устал следить за подписками вручную?</h2>
+        <p>Зайди в аккаунт, чтобы сохранить подписки, видеть ближайшие списания и переключать темы без потери данных.</p>
+        <ul class="auth-points">
+          <li>Быстрый вход и регистрация без лишнего шума</li>
+          <li>Безопасное хранение в Firebase вместо localStorage</li>
+          <li>Плавный интерфейс и темная тема в один клик</li>
+        </ul>
+      </section>
+
+      <section class="auth-panel">
+        <button class="modal-close auth-close" id="close-auth-button" type="button" aria-label="Закрыть окно">
+          ×
+        </button>
+
+        <div class="auth-tabs" role="tablist" aria-label="Режим авторизации">
+          <button class="auth-tab active" id="register-tab" data-auth-mode="register" type="button">Регистрация</button>
+          <button class="auth-tab" id="login-tab" data-auth-mode="login" type="button">Вход</button>
+        </div>
+
+        <form id="auth-form" class="auth-form">
+          <label id="name-field">
+            <span>Имя</span>
+            <input type="text" name="displayName" placeholder="Например, Алекс">
+          </label>
+
+          <label id="telegram-field">
+            <span>Telegram username</span>
+            <input type="text" name="telegramUsername" placeholder="@username">
+          </label>
+
+          <label>
+            <span>Email</span>
+            <input type="email" name="email" placeholder="name@example.com" required>
+          </label>
+
+          <label>
+            <span>Пароль</span>
+            <input type="password" name="password" placeholder="Минимум 4 символа" required>
+          </label>
+
+          <p class="auth-note" id="auth-note">Создай аккаунт, чтобы начать вести подписки.</p>
+          <p class="auth-feedback" id="auth-feedback" aria-live="polite"></p>
+
+          <button class="primary-button auth-submit" id="auth-submit-button" type="submit">Создать аккаунт</button>
+          <button class="secondary-button auth-skip" id="auth-skip-button" type="button">Продолжить как гость</button>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <template id="subscription-row-template">
+    <tr>
+      <td class="service-name"></td>
+      <td class="service-category"></td>
+      <td class="service-price"></td>
+      <td class="service-period"></td>
+      <td class="service-date"></td>
+      <td class="service-notification"></td>
+      <td class="service-actions">
+        <button class="icon-button delete-button" type="button">Удалить</button>
+      </td>
+    </tr>
+  </template>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
