@@ -9,3 +9,5 @@ functions/.runtimeconfig.json
 .env.*.local
 serviceAccountKey.json
 functions/serviceAccountKey.json
+.wrangler/
+pages-dist/.wrangler/
